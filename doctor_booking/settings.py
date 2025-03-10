@@ -25,7 +25,12 @@ SECRET_KEY = 'django-insecure-uaoayr+)(zzzkhlt7dv%hth09(s^62@mpvl%*f*(u(=*!hk-^!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['Doctor_Booking.onrender.com', 'localhost']
+ALLOWED_HOSTS = [
+    "doctor-booking-d971.onrender.com",  # ✅ Corrected: No "https://"
+    "localhost",
+    "127.0.0.1"
+]
+
 
 
 

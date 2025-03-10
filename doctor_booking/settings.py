@@ -88,7 +88,7 @@ import dj_database_url
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL', 'sqlite:///db.sqlite3')
+        default=os.getenv('postgresql://hospital_booking_db_user:lP20OjU3naU4BNBWcJnuYG4ity9sqaC5@dpg-cv7dl99c1ekc73dl0kjg-a/hospital_booking_db', 'sqlite:///db.sqlite3')
     )
 }
 

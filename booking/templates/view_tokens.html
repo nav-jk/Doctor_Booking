@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <!-- Token View Card -->
+            <div class="card shadow-lg p-4 border-0" style="border-radius: 15px;">
+                <div class="card-body">
+                    <h2 class="text-center fw-bold mb-3">🔍 View Booked Tokens</h2>
+
+                    <!-- Date & Phone Filter Form -->
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <!-- Date Selection -->
+                        <div class="mb-3">
+                            <label for="date" class="form-label fw-semibold">Select Date:</label>
+                            <select class="form-control shadow-sm p-2" id="date" name="date" required 
+                                    style="border-radius: 8px;">
+                                <option value="">-- Choose a Date --</option>
+                                {% for date in available_dates %}
+                                    <option value="{{ date.date|date:'Y-m-d' }}" 
+                                            {% if date.date == selected_date %}selected{% endif %}>
+                                        {{ date.date|date:'Y-m-d' }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Phone Number Input -->
+<!-- Phone Number Input -->
+<div class="mb-3">
+    <label for="phone" class="form-label fw-semibold">Enter Phone Number:</label>
+    <input type="tel" class="form-control shadow-sm p-2" id="phone" name="phone"
+           placeholder="Enter your phone number" value="{{ phone_number|default_if_none:'' }}"
+           pattern="[0-9]{10}" title="Enter a valid 10-digit phone number"
+           maxlength="10" oninput="this.value = this.value.replace(/\D/g, '')"
+           style="border-radius: 8px; border: 1px solid #ccc; transition: border-color 0.3s ease-in-out;"
+           aria-describedby="phoneHelp">
+    <small id="phoneHelp" class="form-text text-muted">Must be exactly 10 digits.</small>
+</div>
+
+
+
+                        <!-- Submit Button -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-gradient btn-lg shadow-sm px-4 py-2"
+                                    style="background: linear-gradient(135deg, #007bff, #0056b3); color: white;
+                                           border-radius: 10px; transition: 0.3s;">
+                                📋 View Tokens
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+            <!-- Booked Tokens Display -->
+            {% if selected_date %}
+                <div class="card shadow-lg p-4 border-0 mt-4" style="border-radius: 15px;">
+                    <div class="card-body">
+                        <h3 class="fw-bold text-center">📅 Tokens for {{ selected_date }}</h3>
+
+                        {% if tokens %}
+                            <ul class="list-group mt-3">
+                                {% for token in tokens %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <strong>Token #{{ token.token_number }}</strong>
+                                        <span class="badge bg-secondary">Patient Info Hidden</span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-center text-muted mt-3">🚫 No tokens booked for this date.</p>
+                        {% endif %}
+
+                        {% if phone_number %}
+                            <div class="mt-4 text-center">
+                                <h4 class="fw-bold">📍 Your Position in Queue:</h4>
+                                <p class="fs-4 text-primary fw-bold">{{ user_position }}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

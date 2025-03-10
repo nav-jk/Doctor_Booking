@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Token Booking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        /* General Body Styling */
+    /* General Body Styling */
+body {
+    background: linear-gradient(to right, #f8f9fa, #e3e7ed);
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;  /* Ensures full height */
+    margin: 0;
+}
+
+/* Main Container */
+.container-main {
+    flex: 1; /* Pushes footer down */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centers content */
+    align-items: center;
+    margin-top: 30px;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
+    width: 80%;
+    max-width: 900px;
+}
+
+/* Navbar */
+.navbar {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+.navbar a {
+    color: white !important;
+    font-weight: 500;
+}
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+/* Buttons */
+.btn-custom {
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: all 0.3s ease-in-out;
+}
+.btn-custom:hover {
+    transform: scale(1.05);
+}
+.btn-primary {
+    background: #007bff;
+    border: none;
+}
+.btn-secondary {
+    background: #6c757d;
+    border: none;
+}
+
+        /* Navigation Buttons - Positioned Below Content */
+        .nav-buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* Footer */
+        .footer {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 14px;
+    margin-top: auto; /* Ensures footer is at the bottom */
+    width: 100%;
+}
+
+.footer p {
+    margin: 0;
+}
+.footer a {
+    color: #ffcc00;
+    text-decoration: none;
+    font-weight: bold;
+}
+.footer a:hover {
+    text-decoration: underline;
+}
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">📅 DocBooking</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <div class="container container-main">
+        {% block content %}{% endblock %}
+
+        <!-- Back & Home Buttons (Hidden on Home & Doctor Login Page) -->
+        {% if request.resolver_match.url_name not in "home doctor_login" %}
+            <div class="nav-buttons">
+                <a href="javascript:history.back()" class="btn btn-secondary btn-custom">← Back</a>
+                <a href="{% url 'home' %}" class="btn btn-primary btn-custom">🏠 Home</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="container">
+            <p>📍 <strong>Location:</strong> 123 Main Street, Cityville, Country</p>
+            <p>📞 <strong>Contact:</strong> <a href="tel:+1234567890">+1 234 567 890</a></p>
+            <p>&copy; 2025 DocBooking. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

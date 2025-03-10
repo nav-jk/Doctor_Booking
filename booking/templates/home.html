@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<div class="container mt-4">
+    <div class="text-center p-4 rounded shadow-sm" 
+        style="background: linear-gradient(135deg, #6a11cb, #2575fc); 
+               border-radius: 15px; color: white;">
+        <h1 class="fw-bold">Book Your Appointment with DocBooking</h1>
+        <p class="lead">Easy booking for after-hours medical care</p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="text-center mt-4">
+        <a href="{% url 'book_token' %}" 
+           class="btn btn-lg m-2 shadow-sm" 
+           style="background: #ff416c; color: white; border-radius: 10px;">
+            📅 Book a Token
+        </a>
+        <a href="{% url 'view_tokens' %}" 
+           class="btn btn-lg m-2 shadow-sm" 
+           style="background: #1c1c1c; color: white; border-radius: 10px;">
+            🔍 View Tokens
+        </a>
+        <a href="{% url 'doctor_login' %}" 
+           class="btn btn-lg m-2 shadow-sm" 
+           style="background: #20c997; color: white; border-radius: 10px;">
+            👨‍⚕️ Doctor Login
+        </a>
+    </div>
+    <div class="d-flex justify-content-between mt-4">
+        
+    </div>
+</div>
+
+    
+
+{% endblock %}

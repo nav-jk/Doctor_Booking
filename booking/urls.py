@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
+from .views import check_superuser
 
 urlpatterns = [
     path('', views.home, name='home'),  # Homepage
@@ -11,8 +12,12 @@ urlpatterns = [
     path('doctor-logout/', auth_views.LogoutView.as_view(next_page='home'), name='doctor_logout'),
     path('delete-date/<int:date_id>/', views.delete_date, name='delete_date'),
     path('delete-token/<int:token_id>/', views.delete_token, name='delete_token'),
+    path("check-superuser/", check_superuser, name="check_superuser"),
 
 ]
+
+
+
 
 
 

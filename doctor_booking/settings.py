@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-uaoayr+)(zzzkhlt7dv%hth09(s^62@mpvl%*f*(u(=*!hk-^!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "doctor-booking-d971.onrender.com",  # ✅ Corrected: No "https://"

@@ -119,3 +119,14 @@ def delete_token(request, token_id):
     token = get_object_or_404(Token, id=token_id)
     token.delete()
     return redirect('doctor_dashboard')  # Redirect back to dashboard
+
+from django.http import JsonResponse
+from django.contrib.auth import get_user_model
+
+def check_superuser(request):
+    User = get_user_model()
+    superuser_exists = User.objects.filter(is_superuser=True).exists()
+    
+    return JsonResponse({"superuser_exists": superuser_exists})
+
+

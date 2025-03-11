@@ -123,10 +123,10 @@ def delete_token(request, token_id):
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
 
-def check_superuser(request):
+def get_superuser_details(request):
     User = get_user_model()
-    superuser_exists = User.objects.filter(is_superuser=True).exists()
+    superusers = User.objects.filter(is_superuser=True).values("id", "username", "email", "date_joined", "last_login")
     
-    return JsonResponse({"superuser_exists": superuser_exists})
+    return JsonResponse({"superusers": list(superusers)}, safe=False)
 
 

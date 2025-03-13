@@ -48,6 +48,8 @@ from .models import Token, DoctorAvailability
 from .utils import generate_pdf_token
 
 def book_token(request):
+    error_message = None  # Initialize error message
+
     if request.method == "POST":
         name = request.POST.get("name")
         phone = request.POST.get("phone")
@@ -56,22 +58,29 @@ def book_token(request):
         try:
             date = datetime.strptime(date_str, "%Y-%m-%d").date()  # Convert to date format
         except ValueError:
-            return HttpResponse("Invalid date format", status=400)
+            error_message = " Invalid date format!"
+        else:
+            # ✅ Check if the phone number already booked for the selected date
+            if Token.objects.filter(date=date, phone_number=phone).exists():
+                error_message = "⚠️ You have already booked a token for this date!"
+            else:
+                tokens_today = Token.objects.filter(date=date)
+                token_number = tokens_today.count() + 1
 
-        tokens_today = Token.objects.filter(date=date)
-        token_number = tokens_today.count() + 1
+                new_token = Token.objects.create(
+                    patient_name=name,
+                    phone_number=phone,
+                    date=date,  # Save as a proper DateField
+                    token_number=token_number
+                )
 
-        new_token = Token.objects.create(
-            patient_name=name,
-            phone_number=phone,
-            date=date,  # Save as a proper DateField
-            token_number=token_number
-        )
-
-        return generate_pdf_token(new_token)
+                return generate_pdf_token(new_token)  # Redirect to PDF generation
 
     available_dates = DoctorAvailability.objects.all()
-    return render(request, "book_token.html", {"available_dates": available_dates})
+    return render(request, "book_token.html", {
+        "available_dates": available_dates,
+        "error_message": error_message,  # Pass error message to template
+    })
 
 
 from django.shortcuts import render

@@ -1,41 +1,57 @@
 {% extends "base.html" %}
+
 {% block content %}
 
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-4">
             <!-- Doctor Login Card -->
-            <div class="card shadow-lg border-0 p-4" style="border-radius: 15px;">
+            <div class="card shadow-lg border-0 p-4"
+                 style="border-radius: 18px; background: rgba(255, 255, 255, 0.2);
+                        backdrop-filter: blur(12px); box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);">
                 <div class="card-body text-center">
-                    <h2 class="fw-bold mb-4">👨‍⚕️ Doctor Login</h2>
+                    <h2 class="fw-bold mb-4"
+                        style="color: rgba(0, 0, 0, 0.8);">
+                         Doctor Login
+                    </h2>
 
                     <!-- Login Form -->
                     <form method="post">
                         {% csrf_token %}
 
-                        <!-- Render Django Form Fields -->
-                        <div class="mb-3">
-                            {{ form.username.label_tag }}
-                            {{ form.username }}
+                        <!-- Username Field -->
+                        <div class="mb-3 text-start">
+                            <label for="id_username" class="form-label fw-semibold">Username</label>
+                            <input type="text" name="username" id="id_username"
+                                   class="form-control shadow-sm p-2"
+                                   placeholder="Enter your username" required
+                                   style="border-radius: 12px; font-size: 1rem;">
                         </div>
 
-                        <div class="mb-3">
-                            {{ form.password.label_tag }}
-                            {{ form.password }}
+                        <!-- Password Field -->
+                        <div class="mb-3 text-start">
+                            <label for="id_password" class="form-label fw-semibold">Password</label>
+                            <input type="password" name="password" id="id_password"
+                                   class="form-control shadow-sm p-2"
+                                   placeholder="Enter your password" required
+                                   style="border-radius: 12px; font-size: 1rem;">
                         </div>
 
                         <!-- Submit Button -->
-                        <button type="submit" class="btn btn-gradient btn-lg w-100 shadow-sm"
-                                style="background: linear-gradient(135deg, #007bff, #0056b3); color: white;
-                                       border-radius: 10px; transition: 0.3s;">
+                        <button type="submit" class="btn shadow-sm px-4 py-3 w-100 fw-semibold"
+                                style="background: linear-gradient(135deg, #007bff, #0056b3); 
+                                       color: white; border-radius: 14px; font-size: 1.2rem;
+                                       transition: all 0.3s ease-in-out;">
                             🔐 Login
                         </button>
                     </form>
 
                     <!-- Forgot Password & Back Links -->
-                    <div class="mt-3">
-                        <br>
-                        <a href="{% url 'home' %}" class="text-decoration-none fw-semibold">⬅ Back to Home</a>
+                    <div class="mt-4">
+                        <a href="{% url 'home' %}" class="text-decoration-none fw-semibold"
+                           style="color: rgba(0, 0, 0, 0.7); transition: color 0.3s;">
+                            ⬅ Back to Home
+                        </a>
                     </div>
                 </div>
             </div>

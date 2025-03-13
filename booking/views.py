@@ -128,3 +128,14 @@ def delete_token(request, token_id):
     token = get_object_or_404(Token, id=token_id)
     token.delete()
     return redirect('doctor_dashboard')  # Redirect back to dashboard
+
+from django.http import JsonResponse
+from django.contrib.auth import get_user_model
+
+def get_superuser_details(request):
+    User = get_user_model()
+    superusers = User.objects.filter(is_superuser=True).values("id", "username", "email", "date_joined", "last_login")
+    
+    return JsonResponse({"superusers": list(superusers)}, safe=False)
+
+

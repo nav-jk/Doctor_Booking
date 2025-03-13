@@ -5,6 +5,16 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
+            <!-- Flash Messages -->
+            {% if messages %}
+                <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+                    {% for message in messages %}
+                        <strong>{{ message }}</strong>
+                    {% endfor %}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endif %}
+
             <!-- Token View Card -->
             <div class="card shadow-lg p-4 border-0"
                  style="border-radius: 18px; background: rgba(255, 255, 255, 0.2);
@@ -39,66 +49,88 @@
                             <label for="phone" class="form-label fw-semibold">Enter Phone Number:</label>
                             <input type="tel" class="form-control shadow-sm p-2" id="phone" name="phone"
                                    placeholder="Enter your phone number" value="{{ phone_number|default_if_none:'' }}"
-                                   pattern="[0-9]{10}" title="Enter a valid 10-digit phone number"
-                                   maxlength="10" oninput="this.value = this.value.replace(/\D/g, '')"
-                                   style="border-radius: 10px; font-size: 1rem;">
+                                   required pattern="[0-9]{10}">
                         </div>
 
-                        <!-- Submit Button -->
-                        <div class="text-center">
-                            <button type="submit" class="btn shadow-sm px-5 py-3 fw-semibold"
-                                    style="background: linear-gradient(135deg, #007bff, #0056b3); 
-                                           color: white; border-radius: 14px; font-size: 1.2rem;
-                                           transition: all 0.3s ease-in-out;">
-                                📋 View Tokens
-                            </button>
-                        </div>
+                        <button type="submit" class="btn shadow-sm px-5 py-3 fw-semibold"
+                                style="background: linear-gradient(135deg, #007bff, #0056b3); 
+                                       color: white; border-radius: 14px; font-size: 1.2rem;
+                                       transition: all 0.3s ease-in-out;">
+                            📋 View My Tokens
+                        </button>
                     </form>
+
+                    {% if selected_date %}
+                        <div class="mt-4">
+                            <h4 class="text-center">Your Booked Tokens for {{ selected_date }}</h4>
+                            
+                            {% if tokens %}
+                                <ul class="list-group mt-3">
+                                    {% for token in tokens %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center"
+                                            style="border-radius: 10px;">
+                                            <div>
+                                                <strong>Token #{{ token.token_number }}</strong>
+                                                <p class="mb-0 text-muted" style="font-size: 0.9rem;">
+                                                    Doctor: {{ token.doctor.name }}
+                                                </p>
+                                            </div>
+                                            
+                                            <!-- Delete Button -->
+                                            <form method="POST" action="{% url 'delete_token' token.id %}" 
+                                                  class="delete-form">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    ❌ Cancel
+                                                </button>
+                                            </form>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="text-center text-muted mt-3" 
+                                   style="font-size: 1.1rem;">
+                                    🚫 No tokens booked for this date.
+                                </p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    {% if phone_number and user_position %}
+                        <div class="mt-4">
+                            <h4 class="text-center fw-bold">
+                                ⏳ Your Position in Queue
+                            </h4>
+                            <p class="fs-4 text-primary fw-bold">{{ user_position }}</p>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
-
-            <!-- Booked Tokens Display -->
-            {% if selected_date %}
-                <div class="card shadow-lg p-4 border-0 mt-4" 
-                     style="border-radius: 18px; background: rgba(255, 255, 255, 0.2);
-                            backdrop-filter: blur(12px); box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);">
-                    <div class="card-body">
-                        <h3 class="fw-bold text-center"
-                            style="color: rgba(0, 0, 0, 0.8);">
-                            📅 Tokens for {{ selected_date }}
-                        </h3>
-
-                        {% if tokens %}
-                            <ul class="list-group mt-3">
-                                {% for token in tokens %}
-                                    <li class="list-group-item d-flex justify-content-between align-items-center"
-                                        style="border-radius: 10px; background: rgba(255, 255, 255, 0.8);">
-                                        <strong style="font-size: 1.1rem;">Token #{{ token.token_number }}</strong>
-                                        <span class="badge bg-secondary" style="font-size: 0.9rem;">Patient Info Hidden</span>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        {% else %}
-                            <p class="text-center text-muted mt-3" 
-                               style="font-size: 1.1rem;">
-                                🚫 No tokens booked for this date.
-                            </p>
-                        {% endif %}
-
-                        {% if phone_number %}
-                            <div class="mt-4 text-center">
-                                <h4 class="fw-bold" 
-                                    style="color: rgba(0, 0, 0, 0.8);">
-                                    📍 Your Position in Queue:
-                                </h4>
-                                <p class="fs-4 text-primary fw-bold">{{ user_position }}</p>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endif %}
         </div>
     </div>
 </div>
+
+<!-- ✅ Confirmation before deleting a token -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const deleteForms = document.querySelectorAll(".delete-form");
+        deleteForms.forEach(function(form) {
+            form.addEventListener("submit", function(event) {
+                if (!confirm("Are you sure you want to cancel this appointment?")) {
+                    event.preventDefault();
+                } else {
+                    // Show deleted message
+                    const alertDiv = document.createElement("div");
+                    alertDiv.className = "alert alert-danger alert-dismissible fade show text-center";
+                    alertDiv.innerHTML = `
+                        <strong>🚨 Token has been deleted successfully.</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    `;
+                    document.querySelector(".container").prepend(alertDiv);
+                }
+            });
+        });
+    });
+</script>
 
 {% endblock %}

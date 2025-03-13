@@ -131,29 +131,28 @@
                 <div class="col-md-3">
                     <h6>Services</h6>
                     <ul>
-                        <li><a href="#">Doctor Appointments</a></li>
-                        <li><a href="#">Token Booking</a></li>
-                        <li><a href="#">Medical Consultations</a></li>
-                        <li><a href="#">Health Packages</a></li>
+                        <li><a href="{% url 'book_token' %}">Token Booking</a></li>
+                        <li><a href="{% url 'faq' %}">Medical Consultations</a></li>
+                        <li><a href="{% url 'faq' %}">Health Packages</a></li>
                     </ul>
                 </div>
                 <!-- Column 2 -->
                 <div class="col-md-3">
                     <h6>Support</h6>
                     <ul>
-                        <li><a href="#">FAQs</a></li>
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">Contact Support</a></li>
+                        <li><a href="{% url 'faq' %}">FAQs</a></li>
+                        <li><a href="{% url 'helpcenter' %}">Help Center</a></li>
+                        <li><a href="{% url 'contactsupport' %}">Contact Support</a></li>
                     </ul>
                 </div>
                 <!-- Column 3 -->
                 <div class="col-md-3">
                     <h6>Company</h6>
                     <ul>
-                        <li><a href="#">About Us</a></li>
+                        <li><a  href="{% url 'about' %}">About Us</a></li>
                         <li><a href="#">Careers</a></li>
-                        <li><a href="#">Newsroom</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="{% url 'news' %}">Newsroom</a></li>
+                        <li><a href="{% url 'privacy' %}">Privacy Policy</a></li>
                     </ul>
                 </div>
                 <!-- Column 4 -->

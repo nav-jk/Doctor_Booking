@@ -13,8 +13,14 @@ urlpatterns = [
     path('doctor-logout/', auth_views.LogoutView.as_view(next_page='home'), name='doctor_logout'),
     path('delete-date/<int:date_id>/', views.delete_date, name='delete_date'),
     path('delete-token/<int:token_id>/', views.delete_token, name='delete_token'),
-     path("superuser-details/", get_superuser_details, name="superuser_details"),
-
+    path("superuser-details/", get_superuser_details, name="superuser_details"),
+    path('about/', views.about, name='about'),
+    path('faq/', views.faq, name='faq'),
+    path('privacy/', views.privacy, name='privacy'),
+    path('news/', views.news, name='news'),
+    path('help/', views.help, name='helpcenter'),
+    path('contactsupport/', views.contact, name='contactsupport'),
+    path('delete-appointment/<int:token_id>/', views.delete_appointment, name='delete_appointment'),
 ]
 
 

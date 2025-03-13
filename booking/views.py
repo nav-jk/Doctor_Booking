@@ -1,6 +1,4 @@
 from django.shortcuts import render
-
-
 from django.shortcuts import render, redirect
 from .models import DoctorAvailability, Token
 from .forms import DoctorAvailabilityForm
@@ -8,15 +6,19 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from .models import Token, DoctorAvailability
 from .utils import generate_pdf_token
-
-def home(request):
-    return render(request, 'home.html')
-
-
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib import messages
+from .models import Token
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import DoctorAvailability, Token
 from django.http import HttpResponseRedirect
+
+
+
+def home(request):
+    return render(request, 'home.html')
+
 
 @login_required
 def doctor_dashboard(request):
@@ -98,25 +100,24 @@ def view_tokens(request):
         date_str = request.POST.get("date")
         phone_number = request.POST.get("phone")
 
-        if date_str:
+        if date_str and phone_number:
             try:
                 selected_date = datetime.strptime(date_str, "%Y-%m-%d").date()  # Ensure correct format
             except ValueError:
                 return HttpResponse("Invalid date format", status=400)
 
-            tokens = Token.objects.filter(date=selected_date).order_by("token_number")
+            # Filter tokens by selected date and entered phone number
+            tokens = Token.objects.filter(date=selected_date, phone_number__iexact=phone_number).order_by("token_number")
 
-            # Find user’s position in queue if they entered their phone number
-            if phone_number:
-                try:
-                    user_token = tokens.get(phone_number__iexact=phone_number)  # Case-insensitive matching
-                    user_position = user_token.token_number
-                except Token.DoesNotExist:
-                    user_position = "Not Found"
+            # Find user’s position in queue
+            if tokens.exists():
+                user_position = tokens.first().token_number
+            else:
+                user_position = "Not Found"
 
     return render(request, "view_tokens.html", {
         "available_dates": available_dates,
-        "tokens": tokens,
+        "tokens": tokens,  # Now only contains the tokens of the entered phone number
         "user_position": user_position,
         "selected_date": selected_date,
         "phone_number": phone_number,
@@ -139,3 +140,37 @@ def get_superuser_details(request):
     return JsonResponse({"superusers": list(superusers)}, safe=False)
 
 
+def about(request):
+    return render(request, 'about.html')
+
+
+def faq(request):
+    return render(request, 'faq.html')
+
+
+def privacy(request):
+    return render(request, 'privacy.html')
+
+def news(request):
+    return render(request, 'news.html')
+
+def help(request):
+    return render(request, 'helpcenter.html')
+
+def contact(request):
+    return render(request, 'contactsupport.html')
+
+from .models import Token
+def delete_appointment(request, token_id):
+    appointment = get_object_or_404(Token, id=token_id)
+    
+    if request.method == "POST":
+        appointment.delete()
+        messages.success(request, "Your appointment has been canceled successfully.")
+    
+    return redirect('view_tokens')  # Redirect to the main view where appointments are displayed
+
+
+
+
+ 

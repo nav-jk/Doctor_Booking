@@ -50,7 +50,7 @@ def generate_pdf_token(token):
     elements.append(Spacer(1, 30))
 
  
-    reminder = Paragraph("🔔 Please arrive on time.", styles["BodyText"])
+    reminder = Paragraph(" Please arrive on time.", styles["BodyText"])
     elements.append(reminder)
 
     

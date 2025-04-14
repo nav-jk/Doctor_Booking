@@ -1,20 +1,12 @@
-from django.shortcuts import render
-from django.shortcuts import render, redirect
-from .models import DoctorAvailability, Token
-from .forms import DoctorAvailabilityForm
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-from .models import Token, DoctorAvailability
-from .utils import generate_pdf_token
-from django.shortcuts import redirect, get_object_or_404
-from django.contrib import messages
-from .models import Token
+from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.contrib import messages
+from django.contrib.auth import get_user_model
 from .models import DoctorAvailability, Token
-from django.http import HttpResponseRedirect
-
-
+from .forms import DoctorAvailabilityForm
+from .utils import generate_pdf_token
 
 def home(request):
     return render(request, 'home.html')
@@ -41,16 +33,8 @@ def delete_date(request, date_id):
     date.delete()
     return redirect("doctor_dashboard")
 
-
-
-from datetime import datetime
-from django.shortcuts import render
-from django.http import HttpResponse
-from .models import Token, DoctorAvailability
-from .utils import generate_pdf_token
-
 def book_token(request):
-    error_message = None  # Initialize error message
+    error_message = None  
 
     if request.method == "POST":
         name = request.POST.get("name")
@@ -62,9 +46,9 @@ def book_token(request):
         except ValueError:
             error_message = " Invalid date format!"
         else:
-            # ✅ Check if the phone number already booked for the selected date
+           
             if Token.objects.filter(date=date, phone_number=phone).exists():
-                error_message = "⚠️ You have already booked a token for this date!"
+                error_message = " You have already booked a token for this date!"
             else:
                 tokens_today = Token.objects.filter(date=date)
                 token_number = tokens_today.count() + 1
@@ -72,21 +56,17 @@ def book_token(request):
                 new_token = Token.objects.create(
                     patient_name=name,
                     phone_number=phone,
-                    date=date,  # Save as a proper DateField
+                    date=date,  
                     token_number=token_number
                 )
 
-                return generate_pdf_token(new_token)  # Redirect to PDF generation
+                return generate_pdf_token(new_token)  
 
     available_dates = DoctorAvailability.objects.all()
     return render(request, "book_token.html", {
         "available_dates": available_dates,
-        "error_message": error_message,  # Pass error message to template
+        "error_message": error_message,  
     })
-
-
-from django.shortcuts import render
-from .models import Token, DoctorAvailability
 
 
 def view_tokens(request):
@@ -102,14 +82,14 @@ def view_tokens(request):
 
         if date_str and phone_number:
             try:
-                selected_date = datetime.strptime(date_str, "%Y-%m-%d").date()  # Ensure correct format
+                selected_date = datetime.strptime(date_str, "%Y-%m-%d").date()  
             except ValueError:
                 return HttpResponse("Invalid date format", status=400)
 
-            # Filter tokens by selected date and entered phone number
+            
             tokens = Token.objects.filter(date=selected_date, phone_number__iexact=phone_number).order_by("token_number")
 
-            # Find user’s position in queue
+            
             if tokens.exists():
                 user_position = tokens.first().token_number
             else:
@@ -117,21 +97,18 @@ def view_tokens(request):
 
     return render(request, "view_tokens.html", {
         "available_dates": available_dates,
-        "tokens": tokens,  # Now only contains the tokens of the entered phone number
+        "tokens": tokens,  
         "user_position": user_position,
         "selected_date": selected_date,
         "phone_number": phone_number,
     })
-
-from .models import Token  # Import your Token model
-
+ 
 def delete_token(request, token_id):
     token = get_object_or_404(Token, id=token_id)
     token.delete()
     return redirect('doctor_dashboard')  # Redirect back to dashboard
 
-from django.http import JsonResponse
-from django.contrib.auth import get_user_model
+
 
 def get_superuser_details(request):
     User = get_user_model()
@@ -160,7 +137,7 @@ def help(request):
 def contact(request):
     return render(request, 'contactsupport.html')
 
-from .models import Token
+
 def delete_appointment(request, token_id):
     appointment = get_object_or_404(Token, id=token_id)
     
@@ -168,7 +145,7 @@ def delete_appointment(request, token_id):
         appointment.delete()
         messages.success(request, "Your appointment has been canceled successfully.")
     
-    return redirect('view_tokens')  # Redirect to the main view where appointments are displayed
+    return redirect('view_tokens')  
 
 
 

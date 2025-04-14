@@ -15,7 +15,7 @@ def generate_pdf_token(token):
     elements = []
     styles = getSampleStyleSheet()
 
-    # 🔹 **Header Title (Similar to the Image)**
+    
     header_style = ParagraphStyle(
         'HeaderStyle',
         parent=styles['Title'],
@@ -28,7 +28,7 @@ def generate_pdf_token(token):
     elements.append(header)
     elements.append(Spacer(1, 20))
 
-    # 📌 **Token Information (Formatted Like a Receipt)**
+    
     token_data = [
         ["Date", token.date.strftime('%d-%m-%Y')],
         ["Patient Name", token.patient_name],
@@ -49,11 +49,11 @@ def generate_pdf_token(token):
     elements.append(token_table)
     elements.append(Spacer(1, 30))
 
-    # ⏰ **Reminder**
+ 
     reminder = Paragraph("🔔 Please arrive on time.", styles["BodyText"])
     elements.append(reminder)
 
-    # 📅 **Generated Timestamp**
+    
     timestamp = Paragraph(
         f"<font size=9 color='gray'>Generated on: {datetime.now().strftime('%d-%m-%Y %I:%M %p')}</font>",
         styles["BodyText"]
@@ -61,7 +61,7 @@ def generate_pdf_token(token):
     elements.append(Spacer(1, 20))
     elements.append(timestamp)
 
-    # 📍 **Footer - Clinic Information (Matching Image Style)**
+    
     footer_data = [
         ["📍 Address:", "123 Healthcare Street, Downtown, YourCity - 567890"],
         ["📞 Contact:", "(123) 456-7890"],
@@ -81,6 +81,6 @@ def generate_pdf_token(token):
     elements.append(Spacer(1, 40))
     elements.append(footer_table)
 
-    # 🚀 **Build PDF**
+    
     doc.build(elements)
     return response
